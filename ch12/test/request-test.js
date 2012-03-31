@@ -63,6 +63,33 @@ buster.testCase("Get Request Test", {
             this.xhr.onreadystatechange();
 
             assert(success.called);
-        }
+        },
+        "test should not throw without success handler" : function(){
+            this.xhr.readyState = 4;
+            this.xhr.status = 200;
+            ajax.get("/");
+
+            refute.exception(function(){
+                this.xhr.onreadystatechange();
+            }.bind(this));
+
+        },
+        "test should reset onreadystatechange when complete for memory leak(IE)" : function(){
+            this.xhr.readyState = 4;
+            ajax.get("/");
+            this.xhr.onreadystatechange();
+            assert.same(this.xhr.onreadystatechange, tddjs.noop);// 循環参照対策
+        },
+        "test should call success handler for local requests" : function(){
+            this.xhr.readyState = 4;
+            this.xhr.status = 0;
+            var success = stubFn();
+            tddjs.isLocal = stubFn(true);
+            ajax.get("file.html", {
+                success : success
+            });
+            this.xhr.onreadystatechange();
+            assert(success.called);
+        },
     }
 });

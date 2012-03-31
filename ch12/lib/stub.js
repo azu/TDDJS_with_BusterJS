@@ -1,12 +1,13 @@
 /*jslint indent: 2*/
-function stubFn(returnValue) {
-  var fn = function () {
-    fn.called = true;
-    fn.args = arguments;
-    return returnValue;
-  };
+function stubFn(returnValue){
+    var fn = function(){
+        fn.called = true;
+        fn.args = arguments;
+        return returnValue;
+    };
 
-  fn.called = false;
+    fn.called = false;
 
-  return fn;
+    return fn;
 }
+
