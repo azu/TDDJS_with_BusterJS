@@ -1,0 +1,3 @@
+[submodule "BusterJSDoc"]
+	path = BusterJSDoc
+	url = git@github.com:azu/BusterJSDoc.git
