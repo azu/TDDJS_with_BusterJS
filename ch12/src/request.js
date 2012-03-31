@@ -28,27 +28,43 @@ tddjs.isLocal = (function(){
         options.method = "GET";
         ajax.request(url, options);
     }
+
     function post(url, options){
         options = tddjs.extend({}, options);
         options.method = "POST";
         ajax.request(url, options);
     }
+
+    function setData(options){
+        if (typeof options.data !== "undefined"){
+            if (options.method === "GET"){
+                options.url += "?" + tddjs.util.urlParams(options.data);
+                options.data = null;
+            }else if (options.method === "POST"){
+                options.data = tddjs.util.urlParams(options.data);
+            }else{
+                options.data = null;//null for firefox3 bug
+            }
+        }
+    }
+
     function request(url, options){
         if (typeof url !== "string"){
             throw new TypeError("URL should be string");
         }
-        options = options || {};
-        options.data = tddjs.util.urlParams(options.data);
+        options = tddjs.extend({}, options);
+        options.url = url;
+        setData(options);
         var transport = ajax.create();
         var method = options.method || "GET";
-        transport.open(method, url, true);
+        transport.open(method, options.url, true);
         transport.onreadystatechange = function(){
             if (transport.readyState == 4){
                 requestComplete(transport, options);
                 transport.onreadystatechange = tddjs.noop;
             }
         }
-        transport.send();
+        transport.send(options.data);
     }
 
     ajax.get = get;

@@ -84,6 +84,20 @@ buster.testCase("Get Request Test", {
             ajax.get("/url");
 
             assert(this.xhr.send.called);
+        },
+        "test should send data on URL for GET" : function(){
+            var url = "/url";
+            var object = {
+                filed1 : "13",
+                filed2 : "Lots of data!"
+            };
+            var expected = url + "?" + tddjs.util.urlParams(object);
+            ajax.request("/url", {
+                data : object,
+                method : "GET"
+            });
+
+            assert.equals(this.xhr.open.args[1], expected);
         }
     },
 
@@ -151,9 +165,21 @@ buster.testCase("Get Request Test", {
             };
             ajax.request("/url", {
                 data : object,
-                method:"POST"
+                method : "POST"
             });
             assert.same(tddjs.util.urlParams.args[0], object);
+        },
+        "test should send data with send() for POST" : function(){
+            var object = {
+                filed1 : "13",
+                filed2 : "Lots of data!"
+            };
+            var expected = tddjs.util.urlParams(object);
+            ajax.request("/url", {
+                data : object,
+                method : "POST"
+            });
+            assert.equals(this.xhr.send.args[0], expected);
         }
     }
 });
