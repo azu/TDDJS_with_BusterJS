@@ -38,7 +38,24 @@ tddjs.isLocal = (function(){
         transport.send();
     }
 
+    function request(url, options){
+        if (typeof url !== "string"){
+            throw new TypeError("URL should be string");
+        }
+        options = options || {};
+        var transport = ajax.create();
+        transport.open("GET", url, true);
+        transport.onreadystatechange = function(){
+            if (transport.readyState == 4){
+                requestComplete(transport, options);
+                transport.onreadystatechange = tddjs.noop;
+            }
+        }
+        transport.send();
+    }
+
     ajax.get = get;
+    ajax.request = request;
 
 }());
 
