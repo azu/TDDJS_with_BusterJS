@@ -40,12 +40,14 @@ function isSuccess(transport){
 var setUp = function(){
     this.tddjsIsLocal = tddjs.isLocal;
     this.ajaxCreate = ajax.create;
+    this.ajaxRequest = ajax.request;
     this.xhr = Object.create(fakeXMLHttpRequest);
     ajax.create = stubFn(this.xhr);
 };
 var tearDown = function(){
     tddjs.isLocal = this.tddjsIsLocal;
     ajax.create = this.ajaxCreate;
+    ajax.request = this.ajaxRequest;
 };
 buster.testCase("Get Request Test", {
     setUp : setUp,
@@ -82,6 +84,15 @@ buster.testCase("Get Request Test", {
             assert(this.xhr.send.called);
         }
     },
+
+    "POST Request Test" : {
+        "test should call request with POST method" : function(){
+            ajax.request = stubFn();
+            ajax.post("/uri");
+            assert.equals(ajax.request.args[1].method, "POST");
+        }
+    },
+
     "ReadState Handler Test" : {
         setUp : function(){
             this.ajaxCreate = ajax.create;

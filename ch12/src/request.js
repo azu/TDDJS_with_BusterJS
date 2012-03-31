@@ -28,7 +28,11 @@ tddjs.isLocal = (function(){
         options.method = "GET";
         ajax.request(url, options);
     }
-
+    function post(url, options){
+        options = tddjs.extend({}, options);
+        options.method = "POST";
+        ajax.request(url, options);
+    }
     function request(url, options){
         if (typeof url !== "string"){
             throw new TypeError("URL should be string");
@@ -47,6 +51,7 @@ tddjs.isLocal = (function(){
     }
 
     ajax.get = get;
+    ajax.post = post;
     ajax.request = request;
 
 }());
