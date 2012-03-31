@@ -42,12 +42,14 @@ var setUp = function(){
     this.ajaxCreate = ajax.create;
     this.ajaxRequest = ajax.request;
     this.xhr = Object.create(fakeXMLHttpRequest);
+    this.tddjsUrlParams = tddjs.util.urlParams;
     ajax.create = stubFn(this.xhr);
 };
 var tearDown = function(){
     tddjs.isLocal = this.tddjsIsLocal;
-    ajax.create = this.ajaxCreate;
     ajax.request = this.ajaxRequest;
+    ajax.create = this.ajaxCreate;
+    tddjs.util.urlParams = this.tddjsUrlParams;
 };
 buster.testCase("Get Request Test", {
     setUp : setUp,
@@ -140,6 +142,18 @@ buster.testCase("Get Request Test", {
                 method : "POST"
             });
             assert.equals(this.xhr.open.args[0], "POST");
+        },
+        "test should encode data" : function(){
+            tddjs.util.urlParams = stubFn();
+            var object = {
+                filed1 : "13",
+                filed2 : "Lots of data!"
+            };
+            ajax.request("/url", {
+                data : object,
+                method:"POST"
+            });
+            assert.same(tddjs.util.urlParams.args[0], object);
         }
     }
 });

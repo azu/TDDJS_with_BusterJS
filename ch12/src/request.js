@@ -38,6 +38,7 @@ tddjs.isLocal = (function(){
             throw new TypeError("URL should be string");
         }
         options = options || {};
+        options.data = tddjs.util.urlParams(options.data);
         var transport = ajax.create();
         var method = options.method || "GET";
         transport.open(method, url, true);
