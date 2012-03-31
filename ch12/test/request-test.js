@@ -128,7 +128,7 @@ buster.testCase("Get Request Test", {
             ajax.request("/uri", {
                 method : "POST"
             });
-            assert.equals(this.xhr.open.args[0]);
+            assert.equals(this.xhr.open.args[0], "POST");
         }
     }
 });

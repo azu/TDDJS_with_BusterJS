@@ -13,8 +13,6 @@ tddjs.isLocal = (function(){
     var ajax = tddjs.namespace("ajax");
 
     function requestComplete(transport, options){
-
-
         if (transport.status === 200 || (tddjs.isLocal() && !status)){
             if (typeof options.success === "function"){
                 options.success(transport);
@@ -26,16 +24,9 @@ tddjs.isLocal = (function(){
         if (typeof url !== "string"){
             throw new TypeError("URL should be string");
         }
-        options = options || {};
-        var transport = ajax.create();
-        transport.open("GET", url, true);
-        transport.onreadystatechange = function(){
-            if (transport.readyState == 4){
-                requestComplete(transport, options);
-                transport.onreadystatechange = tddjs.noop;
-            }
-        }
-        transport.send();
+        options = tddjs.extend({}, options);
+        options.method = "GET";
+        ajax.request(url, options);
     }
 
     function request(url, options){
@@ -44,7 +35,8 @@ tddjs.isLocal = (function(){
         }
         options = options || {};
         var transport = ajax.create();
-        transport.open("GET", url, true);
+        var method = options.method || "GET";
+        transport.open(method, url, true);
         transport.onreadystatechange = function(){
             if (transport.readyState == 4){
                 requestComplete(transport, options);
